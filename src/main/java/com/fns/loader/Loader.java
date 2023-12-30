@@ -1,11 +1,16 @@
 package com.fns.loader;
 
 
+import com.fns.loader.gui.GUI;
+
 import javax.swing.*;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Arnah, EthanVann
@@ -65,13 +70,34 @@ public class Loader {
 	public static void main(String[] args) {
 		// Force disable the "JVMLauncher", was just easiest way to do what I wanted at the time.
 		System.setProperty("runelite.launcher.reflect", "true");
+		System.out.println(Arrays.toString(args));
+
+		List<String> argList = new ArrayList<>(Arrays.asList(args));
+		if (argList.contains("--useproxies")) {
+			argList.remove("--useproxies");
+			SwingUtilities.invokeLater(GUI::run);
+			do {
+				sleep(10);
+			} while (!FnsProperties.isStart());
+		}
+		args = argList.toArray(new String[0]);
+
 		new Loader();
-		// Launcher.main(args);
+
 		try {
 			Class<?> clazz = Class.forName("net.runelite.launcher.Launcher");
 			clazz.getMethod("main", String[].class).invoke(null, (Object) args);
 		}
 		catch (Exception ignored) {
+		}
+	}
+
+	private static void sleep(int duration) {
+		try {
+			Thread.sleep(duration);
+		}
+		catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 }
