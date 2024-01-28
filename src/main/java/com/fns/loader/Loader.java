@@ -4,6 +4,7 @@ package com.fns.loader;
 import com.fns.loader.gui.GUI;
 
 import javax.swing.*;
+import java.lang.management.ManagementFactory;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
@@ -72,7 +73,33 @@ public class Loader {
 		System.setProperty("runelite.launcher.reflect", "true");
 		System.out.println(Arrays.toString(args));
 
+		String pid = ManagementFactory.getRuntimeMXBean().getName().split("@")[0];
+		System.out.println("pid: " + pid);
+
 		List<String> argList = new ArrayList<>(Arrays.asList(args));
+		// ArgsWriter.Builder argsBuilder = new ArgsWriter.Builder(pid);
+
+		String accountArg;
+		if ((accountArg = argList.stream().filter(s -> s.startsWith("--account")).findFirst().orElse(null)) != null) {
+//			argsBuilder.withAccount(accountArg.replaceAll("--account=", ""));
+			ArgsWriter.setAccount(accountArg.replaceAll("--account=", ""));
+			argList.remove(accountArg);
+		}
+		String scriptArg;
+		if ((scriptArg = argList.stream().filter(s -> s.startsWith("--script")).findFirst().orElse(null)) != null) {
+//			argsBuilder.withScript(scriptArg.replaceAll("--script=", ""));
+			ArgsWriter.setScript(scriptArg.replaceAll("--script=", ""));
+			argList.remove(scriptArg);
+		}
+		String worldArg;
+		if ((worldArg = argList.stream().filter(s -> s.startsWith("--world")).findFirst().orElse(null)) != null) {
+//			argsBuilder.withWorld(worldArg.replaceAll("--world=", ""));
+			ArgsWriter.setWorld(worldArg.replaceAll("--world=", ""));
+			argList.remove(worldArg);
+		}
+
+//		argsBuilder.build().writeArgs();
+
 		if (argList.contains("--useproxies")) {
 			argList.remove("--useproxies");
 			SwingUtilities.invokeLater(GUI::run);
@@ -80,7 +107,9 @@ public class Loader {
 				sleep(10);
 			} while (!FnsProperties.isStart());
 		}
+
 		args = argList.toArray(new String[0]);
+		System.out.println(Arrays.toString(args));
 
 		new Loader();
 
