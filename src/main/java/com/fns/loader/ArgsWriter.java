@@ -15,6 +15,7 @@ public class ArgsWriter {
 			exitWithError("Invalid world: " + world + "\nWorlds can't be less than 301.");
 		}
 		System.setProperty("ap.fns.world", world);
+		System.out.println("world: " + world);
 	}
 
 	public void writeAccount(String account) {
