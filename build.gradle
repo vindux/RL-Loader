@@ -12,7 +12,7 @@ repositories {
     jcenter()
 }
 
-mainClassName = 'com.fns.loader.Loader'
+mainClassName = 'com.fns.loader.Main'
 def runeLiteVersion = '1.10.17.2'
 
 dependencies {
@@ -22,4 +22,14 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation group: 'net.runelite', name: 'client', version: runeLiteVersion
     testImplementation group: 'net.runelite', name: 'jshell', version: runeLiteVersion
+}
+
+task BuildJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+//    baseName = 'loader'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
