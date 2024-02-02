@@ -13,7 +13,7 @@ repositories {
 }
 
 mainClassName = 'com.fns.loader.Main'
-def runeLiteVersion = '1.10.17.2'
+def runeLiteVersion = '1.10.21'
 
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.20'

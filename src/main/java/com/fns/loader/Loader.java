@@ -1,7 +1,7 @@
 package com.fns.loader;
 
 
-import com.fns.loader.gui.GUI;
+import com.fns.loader.ui.proxy.ProxyGUI;
 
 import javax.swing.*;
 import java.lang.reflect.Method;
@@ -77,7 +77,7 @@ public class Loader {
 
 		if (argSet.contains("--useproxies")) {
 			argSet.remove("--useproxies");
-			SwingUtilities.invokeLater(GUI::run);
+			SwingUtilities.invokeLater(ProxyGUI::run);
 			do {
 				sleep(10);
 			} while (!FnsProperties.isStart());

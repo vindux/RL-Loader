@@ -1,4 +1,4 @@
-package com.fns.loader.gui;
+package com.fns.loader.ui.proxy;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +46,7 @@ public class AddProxyFrame extends JDialog {
 		addButton.addActionListener(e -> {
 			boolean success = processAddingProxy(label.getText(), ip.getText(), port.getText(), user.getText(), pass.getText());
 			if (success) {
-				GUI.updateProxyCombobox();
+				ProxyGUI.updateProxyCombobox();
 				dispose();
 			}
 		});

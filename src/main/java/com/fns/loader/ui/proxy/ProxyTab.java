@@ -1,4 +1,4 @@
-package com.fns.loader.gui;
+package com.fns.loader.ui.proxy;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -174,7 +174,7 @@ public class ProxyTab {
 			}
 			else { // -1 means no row is selected
 				proxyTableModel.removeRow(selectedRow);
-				GUI.updateProxyCombobox();
+				ProxyGUI.updateProxyCombobox();
 			}
 		});
 	}

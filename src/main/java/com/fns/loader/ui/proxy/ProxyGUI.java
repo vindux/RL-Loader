@@ -1,4 +1,4 @@
-package com.fns.loader.gui;
+package com.fns.loader.ui.proxy;
 
 import com.fns.loader.FnsProperties;
 
@@ -9,12 +9,12 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-public class GUI extends JFrame {
+public class ProxyGUI extends JFrame {
 	JButton buttonStart;
 	static JComboBox<String> comboBox;
 	static DefaultComboBoxModel<String> comboBoxModel;
 
-	private GUI() {
+	private ProxyGUI() {
 		setTitle("Fns Proxy Selector Launcher");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(500, 300);
@@ -58,7 +58,7 @@ public class GUI extends JFrame {
 	}
 
 	public static void run() {
-		SwingUtilities.invokeLater(GUI::new);
+		SwingUtilities.invokeLater(ProxyGUI::new);
 	}
 
 	public static void updateProxyCombobox() {
