@@ -2,11 +2,13 @@ package com.fns.loader.ui.proxy;
 
 import com.fns.loader.FnsProperties;
 import com.fns.loader.proxy.Proxy;
-import com.fns.loader.ui.components.FDialog;
+import com.fns.loader.ui.Colors;
+import com.fns.loader.ui.components.*;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,36 +16,32 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class ProxyGUI extends JFrame {
-	static JComboBox<String> comboBox;
+	static FComboBox<String> comboBox;
 	static DefaultComboBoxModel<String> comboBoxModel;
-	JButton buttonStart;
+	FButton buttonStart;
 
 	private ProxyGUI() {
 		setTitle("Fns Proxy Selector Launcher");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setSize(500, 300);
+		setSize(500, 400);
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icon.png")));
 
-		JPanel contentPane = new JPanel();
+		FPanel contentPane = new FPanel();
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
 		contentPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 6, 12));
 		setContentPane(contentPane);
 
-		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.setBorder(new EmptyBorder(0, 0, 5, 0));
-
-		JPanel proxyPanel = new JPanel();
+		FPanel proxyPanel = new FPanel();
 		proxyPanel.setLayout(new BoxLayout(proxyPanel, BoxLayout.Y_AXIS));
+		TitledBorder border = BorderFactory.createTitledBorder(new LineBorder(Colors.LIST_COLOR.brighter(), 1, true), "Proxies");
+		border.setTitleColor(Colors.ACCENT_TEXT_COLOR);
+		proxyPanel.setBorder(new CompoundBorder(border, BorderFactory.createEmptyBorder(0, 7, 0, 7)));
+		ProxyTab.setupProxyTab(this, proxyPanel);
+		contentPane.add(proxyPanel);
 
-		ProxyTab.setupProxyTab(proxyPanel);
-
-		tabbedPane.add(proxyPanel, "Proxies");
-		contentPane.add(tabbedPane);
-
-		JPanel startPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
-		startPanel.setBorder(new MatteBorder(1, 0, 0, 0, Color.GRAY));
-		startPanel.add(new JLabel("Proxy:"));
+		FPanel startPanel = new FPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
+		startPanel.add(new FLabel("Proxy:"));
 		startPanel.add(proxies());
 		startPanel.add(startButton());
 
@@ -81,13 +79,13 @@ public class ProxyGUI extends JFrame {
 		comboBoxModel = new DefaultComboBoxModel<>();
 		comboBoxModel.addElement("~ None ~");
 		comboBoxModel.addAll(proxies);
-		comboBox = new JComboBox<>(comboBoxModel);
+		comboBox = new FComboBox<>(comboBoxModel);
 		comboBox.setSelectedIndex(0);
 		return comboBox;
 	}
 
 	private JButton startButton() {
-		buttonStart = new JButton("Start client");
+		buttonStart = new FButton("Start client");
 		buttonStart.addActionListener(e -> {
 			SwingUtilities.invokeLater(() -> {
 				try {

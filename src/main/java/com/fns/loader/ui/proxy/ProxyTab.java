@@ -1,6 +1,10 @@
 package com.fns.loader.ui.proxy;
 
+import com.fns.loader.ui.Colors;
+import com.fns.loader.ui.components.*;
+
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -18,10 +22,32 @@ import java.util.stream.Collectors;
 public class ProxyTab {
 	private static final String USER_HOME = System.getProperty("user.home");
 	private static final File DATA_FILE = new File(USER_HOME, ".runelite/launcher/table_data.csv");
-	private static JButton buttonAdd, buttonRemove;
+	private static JFrame frame;
+	private static FButton buttonAdd, buttonRemove;
 	private static DefaultTableModel proxyTableModel;
-	private static JTable proxyTable;
-	private static JPanel parentPanel;
+	private static FTable proxyTable;
+	private static FPanel parentPanel;
+
+	public static void setupProxyTab(JFrame jFrame, FPanel proxyPanel) {
+		frame = jFrame;
+
+		FPanel tablePanel = new FPanel();
+		tablePanel.setLayout(new BorderLayout());
+		tablePanel.setFocusable(false);
+		addTableToPane(tablePanel);
+		tablePanel.setBorder(new MatteBorder(0, 0, 1, 0, Colors.BODY_COLOR.brighter().brighter()));
+		proxyPanel.add(tablePanel);
+		parentPanel = proxyPanel;
+
+		FPanel inputPanel = new FPanel(new BorderLayout(5, 3));
+		setupButtons();
+		FPanel buttonPanel = new FPanel(new FlowLayout());
+		addButtonsTo(buttonPanel);
+
+		inputPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+		proxyPanel.add(inputPanel);
+	}
 
 	public static List<String> getProxies() {
 		var proxies = proxyTableModel.getDataVector();
@@ -45,41 +71,21 @@ public class ProxyTab {
 		return null;
 	}
 
-	public static void setupProxyTab(JPanel proxyPanel) {
-		JPanel tablePanel = new JPanel();
-		tablePanel.setLayout(new BorderLayout());
-		tablePanel.setFocusable(false);
-		addTableToPane(tablePanel);
-		proxyPanel.add(tablePanel);
-		parentPanel = proxyPanel;
-
-		JPanel inputPanel = new JPanel(new BorderLayout(5, 3));
-		setupLabelsAndFields();
-		setupButtons();
-
-		JPanel buttonPanel = new JPanel(new FlowLayout());
-		addButtonsTo(buttonPanel);
-
-		inputPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-		proxyPanel.add(inputPanel);
-	}
-
-	private static void addTableToPane(JPanel panel) {
+	private static void addTableToPane(FPanel panel) {
 		// Table with 5 columns
-		proxyTableModel = new NonEditableTableModel(new Object[]{"Label", "IP Address", "Port", "Username", "Password"}, 0);
+		proxyTableModel = new NonEditableTableModel(new Object[]{"Label", "IP Address", "Port", "Username", "Password"}, 0, true);
 		proxyTableModel.addTableModelListener(e -> writeTableToFile(DATA_FILE));
 		// Initialize the table with data from the file
 		List<String[]> data = readCsvFile(DATA_FILE);
 		initializeTableWithData(data);
-		proxyTable = new JTable(proxyTableModel);
+		proxyTable = new FTable(proxyTableModel);
 		proxyTable.getTableHeader().setReorderingAllowed(false); // make columns non-moveable
 		proxyTable.setFocusable(false);
 		TableCellRenderer headerRenderer = proxyTable.getTableHeader().getDefaultRenderer();
 		if (headerRenderer instanceof DefaultTableCellRenderer) {
 			((DefaultTableCellRenderer) headerRenderer).setHorizontalAlignment(SwingConstants.LEFT);
 		}
-		JScrollPane tableScrollPane = new JScrollPane(proxyTable);
+		FScrollPane tableScrollPane = new FScrollPane(proxyTable);
 		panel.add(tableScrollPane);
 	}
 
@@ -142,35 +148,19 @@ public class ProxyTab {
 		}
 	}
 
-	private static void setupLabelsAndFields() {
-		// Text input fields and buttons
-//		JLabel labelIP = new JLabel("IP:");
-//		JLabel labelPort = new JLabel("Port:");
-//		JLabel labelUser = new JLabel("User:");
-//		JLabel labelPass = new JLabel("Pass:");
-		JTextField inputFieldIP = new JTextField();
-		inputFieldIP.setPreferredSize(new Dimension(125, 20));
-		JTextField inputFieldPort = new JTextField();
-		inputFieldPort.setPreferredSize(new Dimension(125, 20));
-		JTextField inputFieldUser = new JTextField();
-		inputFieldUser.setPreferredSize(new Dimension(125, 20));
-		JTextField inputFieldPass = new JTextField();
-		inputFieldPass.setPreferredSize(new Dimension(125, 20));
-	}
-
 	private static void setupButtons() {
-		buttonAdd = new JButton("Add Proxy");
+		buttonAdd = new FButton("Add Proxy");
 		buttonAdd.setPreferredSize(new Dimension(120, 25));
 		buttonAdd.addActionListener(e -> {
 			new AddProxyFrame(parentPanel);
 		});
 
-		buttonRemove = new JButton("Remove Proxy");
+		buttonRemove = new FButton("Remove Proxy");
 		buttonRemove.setPreferredSize(new Dimension(120, 25));
 		buttonRemove.addActionListener(e -> {
 			int selectedRow = proxyTable.getSelectedRow();
 			if (selectedRow == -1) {
-				JOptionPane.showMessageDialog(proxyTable, "Select a row to remove.", "Error", JOptionPane.ERROR_MESSAGE);
+				FDialog.createAndShowCustomDialog(frame, "Error", "Select a row to remove.");
 			}
 			else { // -1 means no row is selected
 				proxyTableModel.removeRow(selectedRow);
@@ -186,18 +176,5 @@ public class ProxyTab {
 
 	public static void addRow(String labelText, String ipText, String portText, String userText, String passText) {
 		proxyTableModel.addRow(new Object[]{labelText, ipText, portText, userText, passText});
-	}
-
-	public static class NonEditableTableModel extends DefaultTableModel {
-		public NonEditableTableModel(Object[] columnNames, int rowCount) {
-			super(columnNames, rowCount);
-		}
-
-		@Override
-		public boolean isCellEditable(int row, int column) {
-			// Set specific columns as editable, if needed
-			// For now, make all cells non-editable
-			return false;
-		}
 	}
 }

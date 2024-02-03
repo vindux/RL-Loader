@@ -41,7 +41,6 @@ public class ConfigurationsTab {
 
 		FPanel inputPanel = new FPanel(new BorderLayout(5, 3));
 		setupButtons();
-
 		FPanel buttonPanel = new FPanel(new FlowLayout());
 		addButtonsTo(buttonPanel);
 
