@@ -23,6 +23,7 @@ public class AddConfigurationFrame extends JDialog {
 		label.setToolTipText("The name of the configuration");
 		contentPane.add(label);
 		FTextField labelField = new FTextField();
+		labelField.setFont(new Font("Arial", Font.PLAIN, 11));
 		labelField.setToolTipText("The name of the configuration");
 		contentPane.add(labelField);
 
@@ -30,6 +31,7 @@ public class AddConfigurationFrame extends JDialog {
 		login.setToolTipText("The login of the RuneScape Account");
 		contentPane.add(login);
 		FTextField loginField = new FTextField();
+		loginField.setFont(new Font("Arial", Font.PLAIN, 11));
 		loginField.setToolTipText("The login of the RuneScape Account");
 		contentPane.add(loginField);
 
@@ -37,6 +39,7 @@ public class AddConfigurationFrame extends JDialog {
 		password.setToolTipText("The password of the RuneScape Account");
 		contentPane.add(password);
 		FTextField passwordField = new FTextField();
+		passwordField.setFont(new Font("Arial", Font.PLAIN, 11));
 		passwordField.setToolTipText("The password of the RuneScape Account");
 		contentPane.add(passwordField);
 
@@ -44,28 +47,32 @@ public class AddConfigurationFrame extends JDialog {
 		world.setToolTipText("The world to connect to");
 		contentPane.add(world);
 		FTextField worldField = new FTextField();
-		world.setToolTipText("The world to connect to");
+		worldField.setFont(new Font("Arial", Font.PLAIN, 11));
+		worldField.setToolTipText("The world to connect to");
 		contentPane.add(worldField);
 
 		FLabel scriptName = new FLabel("Script Name:");
 		scriptName.setToolTipText("The name of the script to run");
 		contentPane.add(scriptName);
 		FTextField scriptNameField = new FTextField();
-		scriptName.setToolTipText("The name of the script to run");
+		scriptNameField.setFont(new Font("Arial", Font.PLAIN, 11));
+		scriptNameField.setToolTipText("The name of the script to run");
 		contentPane.add(scriptNameField);
 
 		FLabel scriptConfig = new FLabel("Script Config:");
 		scriptConfig.setToolTipText("The configuration of the script to run");
 		contentPane.add(scriptConfig);
 		FTextField scriptConfigField = new FTextField();
-		scriptConfig.setToolTipText("The configuration of the script to run");
+		scriptConfigField.setFont(new Font("Arial", Font.PLAIN, 11));
+		scriptConfigField.setToolTipText("The configuration of the script to run");
 		contentPane.add(scriptConfigField);
 
 		FLabel fps = new FLabel("FPS:");
 		fps.setToolTipText("The max FPS to run the client at");
 		contentPane.add(fps);
 		FTextField fpsField = new FTextField();
-		fps.setToolTipText("The max FPS to run the client at");
+		fpsField.setFont(new Font("Arial", Font.PLAIN, 11));
+		fpsField.setToolTipText("The max FPS to run the client at");
 		contentPane.add(fpsField);
 
 		FLabel emptyLabel = new FLabel();

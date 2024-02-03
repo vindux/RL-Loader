@@ -4,7 +4,13 @@ package com.fns.loader;
 import com.fns.loader.ui.proxy.ProxyGUI;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -66,6 +72,9 @@ public class Loader {
 	}
 
 	public static void main(String[] args) {
+		VersionCheck versionCheck = new VersionCheck();
+		versionCheck.check();
+
 		// Force disable the "JVMLauncher", was just easiest way to do what I wanted at the time.
 		System.setProperty("runelite.launcher.reflect", "true");
 		System.out.println(Arrays.toString(args));

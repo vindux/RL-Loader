@@ -1,10 +1,7 @@
 package com.fns.loader.ui.clientlauncher;
 
 import com.fns.loader.ui.Colors;
-import com.fns.loader.ui.components.FButton;
-import com.fns.loader.ui.components.FComboBox;
-import com.fns.loader.ui.components.FLabel;
-import com.fns.loader.ui.components.FPanel;
+import com.fns.loader.ui.components.*;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -96,7 +93,7 @@ public class ClientLauncherGUI extends JFrame {
 				var configuration = ConfigurationsTab.getConfiguration(configurationLabel);
 				// this.dispose();
 				if (configuration == null) {
-					JOptionPane.showMessageDialog(null, "Select a configuration to launch.", "Error", JOptionPane.ERROR_MESSAGE);
+					FDialog.createAndShowCustomDialog(this, "Select a configuration to launch.", "Error");
 				}
 				else {
 					System.out.println("Starting client with configuration: " + configuration[0] + " " + configuration[1] + " " + configuration[2] + " " + configuration[3] + " " + configuration[4] + " " + configuration[5] + " " + configuration[6]);

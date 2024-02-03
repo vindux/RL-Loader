@@ -15,4 +15,9 @@ public class FLabel extends JLabel {
 		setOpaque(false);
 		setForeground(Colors.TEXT_COLOR);
 	}
+
+	@Override
+	public JToolTip createToolTip() {
+		return (new FToolTip(this));
+	}
 }

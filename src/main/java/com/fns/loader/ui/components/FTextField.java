@@ -18,4 +18,9 @@ public class FTextField extends JTextField {
 		setSelectionColor(Colors.TEXT_COLOR.darker().darker());
 		setBorder(new CompoundBorder(new LineBorder(Colors.LIST_COLOR.brighter()), new EmptyBorder(2,2,2,2)));
 	}
+
+	@Override
+	public JToolTip createToolTip() {
+		return (new FToolTip(this));
+	}
 }
