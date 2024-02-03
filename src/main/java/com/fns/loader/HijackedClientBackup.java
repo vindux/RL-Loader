@@ -102,18 +102,33 @@ public class HijackedClientBackup {
 			// ignore
 		}
 		try {
-			List<Path> files = new ArrayList<>();
+			Files.createDirectories(RuneLite.RUNELITE_DIR.toPath().resolve("external-plugins"));
+		}
+		catch (IOException e) {
+			// ignore
+		}
+		List<Path> files = new ArrayList<>();
+		try {
 			try (Stream<Path> walkable = Files.walk(RuneLite.RUNELITE_DIR.toPath().resolve("sideloaded-plugins"))) {
 				walkable.filter(Files::isRegularFile)
 						.filter(f -> f.toString().endsWith(".jar"))
 						.forEach(files::add);
 			}
-			return files;
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return new ArrayList<>();
+		try {
+			try (Stream<Path> walkable = Files.walk(RuneLite.RUNELITE_DIR.toPath().resolve("external-plugins"))) {
+				walkable.filter(Files::isRegularFile)
+						.filter(f -> f.toString().endsWith(".jar"))
+						.forEach(files::add);
+			}
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return files;
 	}
 
 	public List<ClassByte> listFilesInJar(Path jarPath) {
