@@ -93,7 +93,7 @@ public class ClientLauncherGUI extends JFrame {
 				var configuration = ConfigurationsTab.getConfiguration(configurationLabel);
 				// this.dispose();
 				if (configuration == null) {
-					FDialog.createAndShowCustomDialog(this, "Select a configuration to launch.", "Error");
+					FDialog.createAndShowCustomDialog(this, "Error", "Select a configuration to launch.");
 				}
 				else {
 					System.out.println("Starting client with configuration: " + configuration[0] + " " + configuration[1] + " " + configuration[2] + " " + configuration[3] + " " + configuration[4] + " " + configuration[5] + " " + configuration[6]);

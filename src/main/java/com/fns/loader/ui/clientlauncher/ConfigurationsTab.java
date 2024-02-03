@@ -156,7 +156,7 @@ public class ConfigurationsTab {
 		buttonRemove.addActionListener(e -> {
 			int selectedRow = configurationsTable.getSelectedRow();
 			if (selectedRow == -1) {
-				FDialog.createAndShowCustomDialog(frame, "Select a row to remove.", "Error");
+				FDialog.createAndShowCustomDialog(frame, "Error", "Select a row to remove.");
 			}
 			else { // -1 means no row is selected
 				configurationsTableModel.removeRow(selectedRow);

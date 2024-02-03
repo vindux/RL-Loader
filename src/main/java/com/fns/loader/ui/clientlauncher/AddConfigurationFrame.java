@@ -140,6 +140,6 @@ public class AddConfigurationFrame extends JDialog {
 	}
 
 	private void errorDialogue(String message) {
-		FDialog.createAndShowCustomDialog((JFrame) this.getParent().getParent(), message, "Error");
+		FDialog.createAndShowCustomDialog((JFrame) this.getParent().getParent(), "Error", message);
 	}
 }

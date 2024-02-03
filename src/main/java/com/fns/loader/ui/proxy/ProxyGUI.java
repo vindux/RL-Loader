@@ -1,18 +1,22 @@
 package com.fns.loader.ui.proxy;
 
 import com.fns.loader.FnsProperties;
+import com.fns.loader.proxy.Proxy;
+import com.fns.loader.ui.components.FDialog;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class ProxyGUI extends JFrame {
-	JButton buttonStart;
 	static JComboBox<String> comboBox;
 	static DefaultComboBoxModel<String> comboBoxModel;
+	JButton buttonStart;
 
 	private ProxyGUI() {
 		setTitle("Fns Proxy Selector Launcher");
@@ -106,10 +110,34 @@ public class ProxyGUI extends JFrame {
 	}
 
 	private void launch(String ip, String port, String user, String pass) throws IOException, ExecutionException, InterruptedException {
-		if (ip != null && !ip.isEmpty()) FnsProperties.setIp(ip);
-		if (port != null && !port.isEmpty()) FnsProperties.setPort(port);
-		if (user != null && !user.isEmpty()) FnsProperties.setUser(user);
-		if (pass != null && !pass.isEmpty()) FnsProperties.setPass(pass);
-		FnsProperties.setStart(true);
+		if (ip != null && !ip.isEmpty() && port != null && !port.isEmpty()) {
+			System.out.println("Setting up proxy with ip: " + ip + " port: " + port + " user: " + user + " pass: " + pass);
+			new Thread(() -> {
+				Proxy proxy = new Proxy(ip, port, user, pass);
+				proxy.setup();
+				try {
+					Thread.sleep(1000);
+				}
+				catch (InterruptedException ignored) {
+				}
+				if (!proxy.checkIp()) {
+					List<String> msg = new ArrayList<>();
+					msg.add("Could not connect with this proxy: ");
+					msg.add(ip + ":" + port);
+					if (user != null && pass != null) {
+						msg.set(1, msg.get(1) +":" + user + ":" + pass);
+					}
+					FDialog.createAndShowCustomDialog(this, "Proxy Error", msg.toArray(new String[0]));
+					System.exit(0);
+				}
+				else {
+					FnsProperties.setStart(true);
+				}
+			}).start();
+		}
+		else {
+			System.out.println("No proxy selected.");
+			FnsProperties.setStart(true);
+		}
 	}
 }
