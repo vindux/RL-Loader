@@ -1,13 +1,9 @@
 package com.fns.loader.ui.clientlauncher;
 
-import com.fns.loader.ui.Colors;
 import com.fns.loader.ui.components.*;
 import com.fns.loader.ui.proxy.ProxyTab;
 
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -70,6 +66,7 @@ public class ClientLauncherGUI extends JFrame {
 	}
 
 	public static void run() {
+		UIManager.put("TabbedPane.highlight", Color.green);
 		SwingUtilities.invokeLater(ClientLauncherGUI::new);
 	}
 
