@@ -92,15 +92,25 @@ public class FTable extends JTable {
 
 	@Override
 	public Component prepareEditor(TableCellEditor editor, int row, int column) {
-		JTextField component = (JTextField) super.prepareEditor(editor, row, column);
+		Component component = super.prepareEditor(editor, row, column);
 
-		// Set background color for cells being edited
-		component.setBackground(Colors.BODY_COLOR.brighter().brighter());
-		component.setForeground(Colors.TEXT_COLOR);
-		component.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
-		component.setCaretColor(Colors.TEXT_COLOR);
-		component.setSelectedTextColor(Color.BLACK);
-		component.setSelectionColor(Colors.TEXT_COLOR.darker().darker());
+		if (component instanceof JTextField) {
+			JTextField textField = (JTextField) component;
+			// Set background color for cells being edited
+			textField.setBackground(Colors.BODY_COLOR.brighter().brighter());
+			textField.setForeground(Colors.TEXT_COLOR);
+			textField.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+			textField.setCaretColor(Colors.TEXT_COLOR);
+			textField.setSelectedTextColor(Color.BLACK);
+			textField.setSelectionColor(Colors.TEXT_COLOR.darker().darker());
+		}
+		if (component instanceof JComboBox) {
+			JComboBox<String> comboBox = (JComboBox<String>) component;
+			// Set background color for cells being edited
+			comboBox.setBackground(Colors.BODY_COLOR.brighter().brighter());
+			comboBox.setForeground(Colors.TEXT_COLOR);
+			comboBox.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+		}
 		return component;
 	}
 }

@@ -2,12 +2,14 @@ package com.fns.loader.ui.clientlauncher;
 
 import com.fns.loader.ui.Colors;
 import com.fns.loader.ui.components.*;
+import com.fns.loader.ui.proxy.ProxyGUI;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -26,6 +28,7 @@ public class ConfigurationsTab {
 	private static DefaultTableModel configurationsTableModel;
 	private static FTable configurationsTable;
 	private static FPanel parentPanel;
+	private static JComboBox<String> comboBox;
 
 	public static void setupConfigurationsTab(JFrame jFrame, FPanel configurationPanel, String rlExeDir) {
 		frame = jFrame;
@@ -72,21 +75,31 @@ public class ConfigurationsTab {
 	}
 
 	private static void addTableToPane(FPanel panel) {
-		// Table with 7 columns
-		configurationsTableModel = new NonEditableTableModel(new Object[]{"Label", "Login", "Password", "World", "Script Name", "Script Config", "FPS"}, 0, false);
+		// Table with 8 columns
+		configurationsTableModel = new NonEditableTableModel(new Object[]{"Label", "Login", "Password", "World", "Script Name", "Script Config", "Max FPS", "Proxy"}, 0, false);
 		configurationsTableModel.addTableModelListener(e -> writeTableToFile(DATA_FILE));
-		// Initialize the table with data from the file
-		List<String[]> data = readCsvFile(DATA_FILE);
-		initializeTableWithData(data);
 		configurationsTable = new FTable(configurationsTableModel);
 		configurationsTable.getTableHeader().setReorderingAllowed(false); // make columns non-moveable
 		configurationsTable.setFocusable(false);
 		configurationsTable.getTableHeader().setResizingAllowed(false);
+
+		// make 8th tables editor a combobox with proxies
+		TableColumn tableColumn = configurationsTable.getColumnModel().getColumn(7);
+		comboBox = ProxyGUI.getProxiesComboBox();
+		comboBox.addActionListener(System.out::println);
+		tableColumn.setCellEditor(new DefaultCellEditor(comboBox));
+
+		// Initialize the table with data from the file
+		List<String[]> data = readCsvFile(DATA_FILE);
+		initializeTableWithData(data);
+
 		TableCellRenderer headerRenderer = configurationsTable.getTableHeader().getDefaultRenderer();
 		if (headerRenderer instanceof DefaultTableCellRenderer) {
 			((DefaultTableCellRenderer) headerRenderer).setHorizontalAlignment(SwingConstants.LEFT);
 		}
 		FScrollPane tableScrollPane = new FScrollPane(configurationsTable);
+
+
 		panel.add(tableScrollPane);
 	}
 
@@ -135,10 +148,17 @@ public class ConfigurationsTab {
 
 	private static void initializeTableWithData(List<String[]> data) {
 		for (String[] row : data) {
-			if (row.length != 7) {
+			if (row.length != 8) {
 				System.err.println("Invalid row in configurations.csv: " + String.join(",", row));
-//				row = new String[]{"", row[0], row[1], "", ""};
 			}
+			if (row.length == 7) row = new String[]{row[0], row[1], row[2], row[3], row[4], row[5], row[6], "@"};
+			boolean b = false;
+			for (int i = 0; i < comboBox.getItemCount(); i++) {
+				if (comboBox.getItemAt(i).equals(row[7])) {
+					b = true;
+				}
+			}
+			if (!b) row[7] = comboBox.getItemAt(0);
 			configurationsTableModel.addRow(row);
 		}
 	}

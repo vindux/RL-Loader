@@ -42,7 +42,7 @@ public class ProxyGUI extends JFrame {
 
 		FPanel startPanel = new FPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
 		startPanel.add(new FLabel("Proxy:"));
-		startPanel.add(proxies());
+		startPanel.add(getProxiesComboBox());
 		startPanel.add(startButton());
 
 		contentPane.add(startPanel);
@@ -74,7 +74,7 @@ public class ProxyGUI extends JFrame {
 		});
 	}
 
-	private JComboBox<String> proxies() {
+	public static JComboBox<String> getProxiesComboBox() {
 		var proxies = ProxyTab.getProxies();
 		comboBoxModel = new DefaultComboBoxModel<>();
 		comboBoxModel.addElement("~ None ~");

@@ -2,6 +2,7 @@ package com.fns.loader.ui.clientlauncher;
 
 import com.fns.loader.ui.Colors;
 import com.fns.loader.ui.components.*;
+import com.fns.loader.ui.proxy.ProxyTab;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -24,7 +25,7 @@ public class ClientLauncherGUI extends JFrame {
 
 		setTitle("Client Launcher");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(600, 450);
+		setSize(650, 450);
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icon.png")));
 
@@ -33,13 +34,25 @@ public class ClientLauncherGUI extends JFrame {
 		contentPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 6, 12));
 		setContentPane(contentPane);
 
+		FTabbedPane tabbedPane = new FTabbedPane();
+
 		FPanel configurationsPanel = new FPanel();
+
+		FPanel proxyPanel = new FPanel();
+		proxyPanel.setLayout(new BoxLayout(proxyPanel, BoxLayout.Y_AXIS));
+		ProxyTab.setupProxyTab(this, proxyPanel);
+
 		configurationsPanel.setLayout(new BoxLayout(configurationsPanel, BoxLayout.Y_AXIS));
-		TitledBorder border = BorderFactory.createTitledBorder(new LineBorder(Colors.LIST_COLOR.brighter(), 1, true), "Configurations");
-		border.setTitleColor(Colors.ACCENT_TEXT_COLOR);
-		configurationsPanel.setBorder(new CompoundBorder(border, BorderFactory.createEmptyBorder(0, 7, 0, 7)));
+//		TitledBorder border = BorderFactory.createTitledBorder(new LineBorder(Colors.LIST_COLOR.brighter(), 1, true), "Configurations");
+//		border.setTitleColor(Colors.ACCENT_TEXT_COLOR);
+//		configurationsPanel.setBorder(new CompoundBorder(border, BorderFactory.createEmptyBorder(0, 7, 0, 7)));
 		ConfigurationsTab.setupConfigurationsTab(this, configurationsPanel, path);
-		contentPane.add(configurationsPanel);
+//		contentPane.add(configurationsPanel);
+
+
+		tabbedPane.addTab("Configurations", configurationsPanel);
+		tabbedPane.add("Proxies", proxyPanel);
+		contentPane.add(tabbedPane);
 
 		FPanel startPanel = new FPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
 		startPanel.add(new FLabel("Configuration:"));
