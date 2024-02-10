@@ -15,19 +15,18 @@ public class FTabbedPane extends JTabbedPane {
 		super();
 		setBackground(Colors.BODY_COLOR);
 		setForeground(Colors.ACCENT_TEXT_COLOR);
-		setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		setFocusable(false);
 		setUI(new BasicTabbedPaneUI() {
 			@Override
 			protected void installDefaults() {
 				super.installDefaults();
-				highlight = Color.magenta;
-				lightHighlight = Colors.TEXT_COLOR;
+				highlight = Colors.TEXT_COLOR;
+				lightHighlight = Colors.BODY_COLOR.brighter().brighter().brighter();
 				shadow = Colors.BODY_COLOR;
-				darkShadow = Colors.TEXT_COLOR;
-				focus = Color.green;
+				darkShadow = Colors.BODY_COLOR.brighter().brighter().brighter();
+				focus = Colors.BODY_COLOR.brighter();
 				Field field = FieldUtils.getDeclaredField(BasicTabbedPaneUI.class, "selectedColor", true);
-//				System.out.println(FieldUtils.getAllFieldsList(BasicTabbedPaneUI.class));
 				field.setAccessible(true);
 				try {
 					field.set(this, Colors.BODY_COLOR.brighter());
