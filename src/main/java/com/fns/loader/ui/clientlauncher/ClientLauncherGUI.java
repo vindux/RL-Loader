@@ -21,7 +21,7 @@ public class ClientLauncherGUI extends JFrame {
 
 	private ClientLauncherGUI() {
 		running = true;
-		String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath().replaceAll("/rl-loader.jar", "");
 //		String path = System.getenv("LOCALAPPDATA") + "/Runelite/";
 		System.out.println(path);
 

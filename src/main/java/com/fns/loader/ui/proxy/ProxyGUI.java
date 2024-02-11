@@ -22,7 +22,7 @@ public class ProxyGUI extends JFrame {
 	FButton buttonStart;
 
 	private ProxyGUI() {
-		String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath().replaceAll("/rl-loader.jar", "");
 //		String path = System.getenv("LOCALAPPDATA") + "/Runelite/";
 		System.out.println(path);
 
