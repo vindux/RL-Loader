@@ -119,16 +119,18 @@ public class AddConfigurationFrame extends JDialog {
 	}
 
 	private boolean processAddingCongifuration(String labelText, String loginText, String passwordText, String worldText, String scriptNameText, String scriptConfigText, String fpsText, String proxy) {
+		// Validate input
+		// Label
 		if (labelText.isEmpty()) {
 			errorDialogue("Label cannot be empty.");
 			return false;
 		}
 		if (labelText.length() > 10) {
-			errorDialogue("Label cannot be longer than 10 characters.");
+			errorDialogue("Label cannot be longer", "than 10 characters.");
 			return false;
 		}
 		if (!labelText.matches("[a-zA-Z0-9]+")) {
-			errorDialogue("Label can only contain alphanumerical characters.");
+			errorDialogue("Label can only contain", "alphanumerical characters.");
 			return false;
 		}
 		if (labelText.equals("~ None ~")) {
@@ -139,6 +141,30 @@ public class AddConfigurationFrame extends JDialog {
 			errorDialogue("Label already exists.");
 			return false;
 		}
+		// world
+		if (!worldText.isEmpty()) {
+			if (!isNumber(worldText) && !worldText.equalsIgnoreCase("f2p") && !worldText.equalsIgnoreCase("p2p")) {
+				errorDialogue("Invalid world: " + worldText, "Valid worlds are numbers, 'f2p' and 'p2p'");
+				return false;
+			}
+			if (Integer.parseInt(worldText) <= 300) {
+				errorDialogue("Invalid world: " + worldText, "Worlds can't be less than 301.");
+				return false;
+			}
+		}
+		// fps
+		if (!fpsText.isEmpty()) {
+			if (!isNumber(fpsText)) {
+				errorDialogue("Invalid fps: " + fpsText, "Fps must be a number between 5 and 50.");
+				return false;
+			}
+			int fpsInt = Integer.parseInt(fpsText);
+			if (fpsInt < 5 || fpsInt > 50) {
+				errorDialogue("Invalid fps: " + fpsText, "Fps must be a number between 5 and 50.");
+				return false;
+			}
+		}
+
 		loginText = loginText.isEmpty() ? null : loginText;
 		passwordText = passwordText.isEmpty() ? null : passwordText;
 		worldText = worldText.isEmpty() ? null : worldText;
@@ -150,7 +176,17 @@ public class AddConfigurationFrame extends JDialog {
 		return true;
 	}
 
-	private void errorDialogue(String message) {
+	private boolean isNumber(String str) {
+		try {
+			Integer.parseInt(str);
+			return true;
+		}
+		catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
+	private void errorDialogue(String... message) {
 		FDialog.createAndShowCustomDialog((JFrame) this.getParent().getParent(), "Error", message);
 	}
 }

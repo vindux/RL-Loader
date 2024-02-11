@@ -25,12 +25,23 @@ dependencies {
     testImplementation group: 'net.runelite', name: 'jshell', version: runeLiteVersion
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+// Task to build the JAR
 task BuildJar(type: Jar) {
     manifest {
         attributes 'Main-Class': mainClassName
     }
-//    baseName = 'loader'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
     with jar
 }

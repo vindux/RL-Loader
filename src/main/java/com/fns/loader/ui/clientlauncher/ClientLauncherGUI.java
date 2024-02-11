@@ -73,6 +73,7 @@ public class ClientLauncherGUI extends JFrame {
 
 	public static void run() {
 		UIManager.put("TabbedPane.contentAreaColor", Colors.BODY_COLOR.darker());
+		UIManager.put("TabbedPane.selected", Colors.BODY_COLOR.brighter());
 
 		SwingUtilities.invokeLater(ClientLauncherGUI::new);
 	}
