@@ -10,12 +10,13 @@ public class FDialog {
 	public static int YES_OPTION = 1;
 	public static int NO_OPTION = 0;
 
-	public static void createAndShowCustomDialog(JFrame parentComponent, String title, String... messages) {
+	public static void createAndShowCustomDialog(JFrame parentComponent, int alignment, String title, String... messages) {
 		JDialog customDialog = new JDialog(parentComponent, true);
 		customDialog.setTitle(title);
 		int lineHeight = new JLabel().getFontMetrics(new JLabel().getFont()).getHeight();
-		customDialog.setSize(300, 130 + messages.length * lineHeight);
+		customDialog.setSize(300, 130 + messages.length * (lineHeight + 7));
 		customDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		customDialog.setResizable(false);
 
 		FPanel panel = new FPanel(new GridLayout(0, 1));
 		panel.setBackground(Colors.BODY_COLOR);
@@ -23,7 +24,7 @@ public class FDialog {
 
 		for (String message : messages) {
 			FLabel label = new FLabel(message);
-			label.setHorizontalAlignment(JLabel.CENTER);
+			label.setHorizontalAlignment(alignment);
 			panel.add(label);
 		}
 
@@ -39,14 +40,19 @@ public class FDialog {
 		customDialog.setVisible(true);
 	}
 
+	public static void createAndShowCustomDialog(JFrame parentComponent, String title, String... messages) {
+		createAndShowCustomDialog(parentComponent, JLabel.CENTER, title, messages);
+	}
+
 	public static int createAndShowCustomConfirmDialogue(JFrame parentComponent, String title, String... messages) {
 		AtomicInteger choice = new AtomicInteger(NO_OPTION);
 
 		JDialog customDialog = new JDialog(parentComponent, true);
 		customDialog.setTitle(title);
 		int lineHeight = new JLabel().getFontMetrics(new JLabel().getFont()).getHeight();
-		customDialog.setSize(300, 130 + messages.length * (lineHeight + 5));
+		customDialog.setSize(300, 130 + messages.length * (lineHeight + 7));
 		customDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		customDialog.setResizable(false);
 
 		FPanel panel = new FPanel(new GridLayout(0, 1));
 		panel.setBackground(Colors.BODY_COLOR);

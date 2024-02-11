@@ -24,6 +24,7 @@ public class ProxyGUI extends JFrame {
 	private ProxyGUI() {
 		String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 //		String path = System.getenv("LOCALAPPDATA") + "/Runelite/";
+		System.out.println(path);
 
 		setTitle("Fns Proxy Selector Launcher");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
