@@ -74,7 +74,7 @@ public class ProxyGUI extends JFrame {
 		});
 	}
 
-	public static JComboBox<String> getProxiesComboBox() {
+	public static FComboBox<String> getProxiesComboBox() {
 		var proxies = ProxyTab.getProxies();
 		comboBoxModel = new DefaultComboBoxModel<>();
 		comboBoxModel.addElement("~ None ~");

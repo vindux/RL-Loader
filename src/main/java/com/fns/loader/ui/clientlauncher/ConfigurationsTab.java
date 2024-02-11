@@ -189,7 +189,7 @@ public class ConfigurationsTab {
 		buttonPanel.add(buttonRemove);
 	}
 
-	public static void addRow(String labelText, String loginText, String passwordText, String worldText, String scriptNameText, String scriptConfigText, String fpsText) {
-		configurationsTableModel.addRow(new Object[]{labelText, loginText, passwordText, worldText, scriptNameText, scriptConfigText, fpsText});
+	public static void addRow(String labelText, String loginText, String passwordText, String worldText, String scriptNameText, String scriptConfigText, String fpsText, String proxyText) {
+		configurationsTableModel.addRow(new Object[]{labelText, loginText, passwordText, worldText, scriptNameText, scriptConfigText, fpsText, proxyText});
 	}
 }
