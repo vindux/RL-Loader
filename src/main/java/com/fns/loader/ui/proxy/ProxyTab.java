@@ -180,7 +180,6 @@ public class ProxyTab {
 		else {
 			Object proxyLabel = proxyTable.getModel().getValueAt(selectedRow, 0);
 			if (!ClientLauncherGUI.isRunning()) {
-				System.out.println("ClientLauncherGUI is not running.");
 				int choice = FDialog.createAndShowCustomConfirmDialogue(frame, "Warning", "Really remove the proxy: " + proxyLabel + "?");
 				if (choice == FDialog.NO_OPTION) return;
 				proxyTableModel.removeRow(selectedRow);

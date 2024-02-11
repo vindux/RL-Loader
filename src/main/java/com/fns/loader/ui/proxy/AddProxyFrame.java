@@ -2,10 +2,7 @@ package com.fns.loader.ui.proxy;
 
 import com.fns.loader.ui.clientlauncher.ClientLauncherGUI;
 import com.fns.loader.ui.clientlauncher.ConfigurationsTab;
-import com.fns.loader.ui.components.FButton;
-import com.fns.loader.ui.components.FLabel;
-import com.fns.loader.ui.components.FPanel;
-import com.fns.loader.ui.components.FTextField;
+import com.fns.loader.ui.components.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,9 +54,6 @@ public class AddProxyFrame extends JDialog {
 				if (ClientLauncherGUI.isRunning()) {
 					ConfigurationsTab.updateProxiesComboBox();
 				}
-				else {
-					System.out.println("ClientLauncherGUI is not running.");
-				}
 				dispose();
 			}
 		});
@@ -92,6 +86,10 @@ public class AddProxyFrame extends JDialog {
 			errorDialogue("Label cannot be \"~ None ~\".");
 			return false;
 		}
+		if (ProxyTab.getProxy(labelText) != null) {
+			errorDialogue("Label already exists.");
+			return false;
+		}
 		if (!ipText.matches("\\d+\\.\\d+\\.\\d+\\.\\d+")) {
 			errorDialogue("IP must be in the form of xxx.xxx.xxx.xxx.");
 			return false;
@@ -117,6 +115,6 @@ public class AddProxyFrame extends JDialog {
 	}
 
 	private void errorDialogue(String message) {
-		JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+		FDialog.createAndShowCustomDialog((JFrame) this.getParent().getParent(), "Error", message);
 	}
 }

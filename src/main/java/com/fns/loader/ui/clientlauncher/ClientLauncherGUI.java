@@ -23,6 +23,7 @@ public class ClientLauncherGUI extends JFrame {
 		running = true;
 		String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 //		String path = System.getenv("LOCALAPPDATA") + "/Runelite/";
+		System.out.println(path);
 
 		setTitle("Client Launcher");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -84,7 +85,6 @@ public class ClientLauncherGUI extends JFrame {
 		var configurations = ConfigurationsTab.getConfigurations();
 		SwingUtilities.invokeLater(() -> {
 			comboBoxModel.removeAllElements();
-			// comboBoxModel.addElement("~ None ~");
 			comboBoxModel.addAll(configurations);
 			comboBox.revalidate();
 			comboBox.repaint();
@@ -94,7 +94,6 @@ public class ClientLauncherGUI extends JFrame {
 	private FComboBox<String> configurations() {
 		var configurations = ConfigurationsTab.getConfigurations();
 		comboBoxModel = new DefaultComboBoxModel<>();
-		// comboBoxModel.addElement("~ None ~");
 		comboBoxModel.addAll(configurations);
 		comboBox = new FComboBox<>(comboBoxModel);
 		if (comboBoxModel.getSize() > 0) comboBox.setSelectedIndex(0);
