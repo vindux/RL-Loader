@@ -1,5 +1,7 @@
 package com.fns.loader.ui.proxy;
 
+import com.fns.loader.ui.clientlauncher.ClientLauncherGUI;
+import com.fns.loader.ui.clientlauncher.ConfigurationsTab;
 import com.fns.loader.ui.components.FButton;
 import com.fns.loader.ui.components.FLabel;
 import com.fns.loader.ui.components.FPanel;
@@ -51,7 +53,13 @@ public class AddProxyFrame extends JDialog {
 		addButton.addActionListener(e -> {
 			boolean success = processAddingProxy(label.getText(), ip.getText(), port.getText(), user.getText(), pass.getText());
 			if (success) {
-				ProxyGUI.updateProxyCombobox();
+				ProxyGUI.updateProxiesCombobox();
+				if (ClientLauncherGUI.isRunning()) {
+					ConfigurationsTab.updateProxiesComboBox();
+				}
+				else {
+					System.out.println("ClientLauncherGUI is not running.");
+				}
 				dispose();
 			}
 		});

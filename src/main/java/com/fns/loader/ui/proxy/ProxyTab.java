@@ -1,6 +1,8 @@
 package com.fns.loader.ui.proxy;
 
 import com.fns.loader.ui.Colors;
+import com.fns.loader.ui.clientlauncher.ClientLauncherGUI;
+import com.fns.loader.ui.clientlauncher.ConfigurationsTab;
 import com.fns.loader.ui.components.*;
 
 import javax.swing.*;
@@ -9,6 +11,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -20,16 +23,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProxyTab {
-	private static final String USER_HOME = System.getProperty("user.home");
-	private static final File DATA_FILE = new File(USER_HOME, ".runelite/launcher/table_data.csv");
+	private static File DATA_FILE;
 	private static JFrame frame;
 	private static FButton buttonAdd, buttonRemove;
 	private static DefaultTableModel proxyTableModel;
 	private static FTable proxyTable;
 	private static FPanel parentPanel;
 
-	public static void setupProxyTab(JFrame jFrame, FPanel proxyPanel) {
+	public static void setupProxyTab(JFrame jFrame, FPanel proxyPanel, String rlExeDir) {
 		frame = jFrame;
+		DATA_FILE = new File(rlExeDir + "/proxies.csv");
 
 		FPanel tablePanel = new FPanel();
 		tablePanel.setLayout(new BorderLayout());
@@ -157,16 +160,7 @@ public class ProxyTab {
 
 		buttonRemove = new FButton("Remove Proxy");
 		buttonRemove.setPreferredSize(new Dimension(120, 25));
-		buttonRemove.addActionListener(e -> {
-			int selectedRow = proxyTable.getSelectedRow();
-			if (selectedRow == -1) {
-				FDialog.createAndShowCustomDialog(frame, "Error", "Select a row to remove.");
-			}
-			else { // -1 means no row is selected
-				proxyTableModel.removeRow(selectedRow);
-				ProxyGUI.updateProxyCombobox();
-			}
-		});
+		buttonRemove.addActionListener(ProxyTab::removeButtonPressed);
 	}
 
 	private static void addButtonsTo(JPanel buttonPanel) {
@@ -176,5 +170,54 @@ public class ProxyTab {
 
 	public static void addRow(String labelText, String ipText, String portText, String userText, String passText) {
 		proxyTableModel.addRow(new Object[]{labelText, ipText, portText, userText, passText});
+	}
+
+	private static void removeButtonPressed(ActionEvent e) {
+		int selectedRow = proxyTable.getSelectedRow();
+		if (selectedRow == -1) { // -1 means no row is selected
+			FDialog.createAndShowCustomDialog(frame, "Error", "Select a row to remove.");
+		}
+		else {
+			Object proxyLabel = proxyTable.getModel().getValueAt(selectedRow, 0);
+			if (!ClientLauncherGUI.isRunning()) {
+				System.out.println("ClientLauncherGUI is not running.");
+				int choice = FDialog.createAndShowCustomConfirmDialogue(frame, "Warning", "Really remove the proxy: " + proxyLabel + "?");
+				if (choice == FDialog.NO_OPTION) return;
+				proxyTableModel.removeRow(selectedRow);
+				ProxyGUI.updateProxiesCombobox();
+			}
+			else {
+				// If client launcher gui is running,
+				// check if the proxy is being used by any configuration
+				// if so, display a warning how many will be effected
+				// if user confirms, remove the proxy
+				FTable table = ConfigurationsTab.getConfigurationsTable();
+				int rows = table.getModel().getRowCount();
+				int columns = table.getModel().getColumnCount();
+				List<Integer> affectedRows = new ArrayList<>();
+				for (int i = 0; i < rows; i++) {
+					Object item = table.getModel().getValueAt(i, columns - 1);
+					if (item.equals(proxyLabel)) {
+						affectedRows.add(i);
+					}
+				}
+
+				int choice;
+				if (affectedRows.isEmpty()) {
+					choice = FDialog.createAndShowCustomConfirmDialogue(frame, "Warning", "Really remove the proxy: " + proxyLabel + "?");
+				}
+				else {
+					String config = affectedRows.size() == 1 ? "configuration" : "configurations";
+					choice = FDialog.createAndShowCustomConfirmDialogue(frame, "Warning", "Removing the proxy: " + proxyLabel, "will affect " + affectedRows.size() + " " + config + ".", "Continue?");
+				}
+				if (choice == FDialog.NO_OPTION) return;
+
+				proxyTableModel.removeRow(selectedRow);
+				ProxyGUI.updateProxiesCombobox();
+				ConfigurationsTab.updateProxiesComboBox();
+				ConfigurationsTab.updateAffectedRows(affectedRows);
+			}
+
+		}
 	}
 }

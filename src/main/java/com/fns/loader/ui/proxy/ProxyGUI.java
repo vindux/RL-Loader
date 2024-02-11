@@ -1,6 +1,7 @@
 package com.fns.loader.ui.proxy;
 
 import com.fns.loader.FnsProperties;
+import com.fns.loader.Main;
 import com.fns.loader.proxy.Proxy;
 import com.fns.loader.ui.Colors;
 import com.fns.loader.ui.components.*;
@@ -21,6 +22,9 @@ public class ProxyGUI extends JFrame {
 	FButton buttonStart;
 
 	private ProxyGUI() {
+		String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+//		String path = System.getenv("LOCALAPPDATA") + "/Runelite/";
+
 		setTitle("Fns Proxy Selector Launcher");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(500, 400);
@@ -37,7 +41,7 @@ public class ProxyGUI extends JFrame {
 		TitledBorder border = BorderFactory.createTitledBorder(new LineBorder(Colors.LIST_COLOR.brighter(), 1, true), "Proxies");
 		border.setTitleColor(Colors.ACCENT_TEXT_COLOR);
 		proxyPanel.setBorder(new CompoundBorder(border, BorderFactory.createEmptyBorder(0, 7, 0, 7)));
-		ProxyTab.setupProxyTab(this, proxyPanel);
+		ProxyTab.setupProxyTab(this, proxyPanel, path);
 		contentPane.add(proxyPanel);
 
 		FPanel startPanel = new FPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
@@ -63,7 +67,7 @@ public class ProxyGUI extends JFrame {
 		SwingUtilities.invokeLater(ProxyGUI::new);
 	}
 
-	public static void updateProxyCombobox() {
+	public static void updateProxiesCombobox() {
 		var proxies = ProxyTab.getProxies();
 		SwingUtilities.invokeLater(() -> {
 			comboBoxModel.removeAllElements();

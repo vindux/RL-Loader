@@ -1,13 +1,12 @@
 package com.fns.loader.ui.clientlauncher;
 
+import com.fns.loader.Main;
 import com.fns.loader.ui.Colors;
 import com.fns.loader.ui.components.*;
 import com.fns.loader.ui.proxy.ProxyTab;
+import lombok.Getter;
 
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -15,13 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientLauncherGUI extends JFrame {
+	@Getter static boolean running = false;
 	static FComboBox<String> comboBox;
 	static DefaultComboBoxModel<String> comboBoxModel;
 	FButton buttonStart;
 
 	private ClientLauncherGUI() {
-//		String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-		String path = System.getenv("LOCALAPPDATA") + "/Runelite/";
+		running = true;
+		String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+//		String path = System.getenv("LOCALAPPDATA") + "/Runelite/";
 
 		setTitle("Client Launcher");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -40,7 +41,7 @@ public class ClientLauncherGUI extends JFrame {
 
 		FPanel proxyPanel = new FPanel();
 		proxyPanel.setLayout(new BoxLayout(proxyPanel, BoxLayout.Y_AXIS));
-		ProxyTab.setupProxyTab(this, proxyPanel);
+		ProxyTab.setupProxyTab(this, proxyPanel, path);
 
 		configurationsPanel.setLayout(new BoxLayout(configurationsPanel, BoxLayout.Y_AXIS));
 //		TitledBorder border = BorderFactory.createTitledBorder(new LineBorder(Colors.LIST_COLOR.brighter(), 1, true), "Configurations");

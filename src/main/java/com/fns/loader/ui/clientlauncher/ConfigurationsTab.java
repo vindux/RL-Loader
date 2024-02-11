@@ -3,6 +3,8 @@ package com.fns.loader.ui.clientlauncher;
 import com.fns.loader.ui.Colors;
 import com.fns.loader.ui.components.*;
 import com.fns.loader.ui.proxy.ProxyGUI;
+import com.fns.loader.ui.proxy.ProxyTab;
+import lombok.Getter;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -11,6 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -26,7 +29,7 @@ public class ConfigurationsTab {
 	private static File DATA_FILE = null;
 	private static FButton buttonAdd, buttonRemove;
 	private static DefaultTableModel configurationsTableModel;
-	private static FTable configurationsTable;
+	@Getter private static FTable configurationsTable;
 	private static FPanel parentPanel;
 	private static JComboBox<String> comboBox;
 
@@ -86,7 +89,7 @@ public class ConfigurationsTab {
 		// make 8th tables editor a combobox with proxies
 		TableColumn tableColumn = configurationsTable.getColumnModel().getColumn(7);
 		comboBox = ProxyGUI.getProxiesComboBox();
-		comboBox.addActionListener(System.out::println);
+		// comboBox.addActionListener(System.out::println);
 		tableColumn.setCellEditor(new DefaultCellEditor(comboBox));
 
 		// Initialize the table with data from the file
@@ -172,16 +175,7 @@ public class ConfigurationsTab {
 
 		buttonRemove = new FButton("Remove Configuration");
 		buttonRemove.setPreferredSize(new Dimension(165, 25));
-		buttonRemove.addActionListener(e -> {
-			int selectedRow = configurationsTable.getSelectedRow();
-			if (selectedRow == -1) {
-				FDialog.createAndShowCustomDialog(frame, "Error", "Select a row to remove.");
-			}
-			else { // -1 means no row is selected
-				configurationsTableModel.removeRow(selectedRow);
-				ClientLauncherGUI.updateConfigurationsCombobox();
-			}
-		});
+		buttonRemove.addActionListener(ConfigurationsTab::removeButtonPressed);
 	}
 
 	private static void addButtonsTo(JPanel buttonPanel) {
@@ -191,5 +185,38 @@ public class ConfigurationsTab {
 
 	public static void addRow(String labelText, String loginText, String passwordText, String worldText, String scriptNameText, String scriptConfigText, String fpsText, String proxyText) {
 		configurationsTableModel.addRow(new Object[]{labelText, loginText, passwordText, worldText, scriptNameText, scriptConfigText, fpsText, proxyText});
+	}
+
+	public static void updateProxiesComboBox() {
+		System.out.println("Updating proxies combobox");
+		System.out.println("Before: " + (comboBox.getItemCount() - 1) + " items");
+		comboBox.removeAllItems();
+		comboBox.addItem("~ None ~");
+		for (String proxy : ProxyTab.getProxies()) {
+			comboBox.addItem(proxy);
+		}
+		System.out.println("After: " + (comboBox.getItemCount() - 1) + " items");
+		// cellEditor = new DefaultCellEditor(comboBox);
+	}
+
+	public static void updateAffectedRows(List<Integer> rows) {
+		System.out.println("Updating " + rows.size() + " affected rows");
+		for (int row : rows) {
+			configurationsTableModel.setValueAt("~ None ~", row, 7);
+		}
+	}
+
+	private static void removeButtonPressed(ActionEvent e) {
+		int selectedRow = configurationsTable.getSelectedRow();
+		if (selectedRow == -1) {
+			FDialog.createAndShowCustomDialog(frame, "Error", "Select a row to remove.");
+		}
+		else { // -1 means no row is selected
+			Object configurationLabel = configurationsTable.getModel().getValueAt(selectedRow, 0);
+			int choice = FDialog.createAndShowCustomConfirmDialogue(frame, "Warning", "Really remove the configuration: " + configurationLabel + "?");
+			if (choice == FDialog.NO_OPTION) return;
+			configurationsTableModel.removeRow(selectedRow);
+			ClientLauncherGUI.updateConfigurationsCombobox();
+		}
 	}
 }
