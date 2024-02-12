@@ -188,19 +188,14 @@ public class ConfigurationsTab {
 	}
 
 	public static void updateProxiesComboBox() {
-		System.out.println("Updating proxies combobox");
-		System.out.println("Before: " + (comboBox.getItemCount() - 1) + " items");
 		comboBox.removeAllItems();
 		comboBox.addItem("~ None ~");
 		for (String proxy : ProxyTab.getProxies()) {
 			comboBox.addItem(proxy);
 		}
-		System.out.println("After: " + (comboBox.getItemCount() - 1) + " items");
-		// cellEditor = new DefaultCellEditor(comboBox);
 	}
 
 	public static void updateAffectedRows(List<Integer> rows) {
-		System.out.println("Updating " + rows.size() + " affected rows");
 		for (int row : rows) {
 			configurationsTableModel.setValueAt("~ None ~", row, 7);
 		}

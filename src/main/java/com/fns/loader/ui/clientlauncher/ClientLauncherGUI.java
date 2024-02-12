@@ -23,7 +23,7 @@ public class ClientLauncherGUI extends JFrame {
 		running = true;
 		String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath().replaceAll("/rl-loader.jar", "");
 //		String path = System.getenv("LOCALAPPDATA") + "/Runelite/";
-		System.out.println(path);
+		// System.out.println(path);
 
 		setTitle("Client Launcher");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -112,9 +112,9 @@ public class ClientLauncherGUI extends JFrame {
 					FDialog.createAndShowCustomDialog(this, "Error", "Select a configuration to launch.");
 				}
 				else {
-					System.out.println("Starting client with configuration: " + configuration[0] + " " + configuration[1] + " " + configuration[2] + " " + configuration[3] + " " + configuration[4] + " " + configuration[5] + " " + configuration[6]);
+					System.out.println("Starting client with configuration: " + configuration[0] + " " + configuration[1] + " " + configuration[2] + " " + configuration[3] + " " + configuration[4] + " " + configuration[5] + " " + configuration[6] + " " + configuration[7]);
 					try {
-						launch(configuration[1], configuration[2], configuration[3], configuration[4], configuration[5], configuration[6]);
+						launch(configuration[1], configuration[2], configuration[3], configuration[4], configuration[5], configuration[6], configuration[7]);
 					}
 					catch (IOException | URISyntaxException ex) {
 						throw new RuntimeException(ex);
@@ -125,33 +125,60 @@ public class ClientLauncherGUI extends JFrame {
 		return buttonStart;
 	}
 
-	private void launch(String loginText, String passwordText, String worldText, String scriptNameText, String scriptConfigText, String fpsText) throws IOException, URISyntaxException {
-		ProcessBuilder processBuilder = new ProcessBuilder();
-//		String path = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath().replace("rl-loader.jar", "");
-		String path = System.getenv("LOCALAPPDATA") + "/Runelite/";
-		System.out.println(path);
+	public boolean isIntellijDebug() {
+		return java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("jdwp");
+	}
+
+	private void launch(String loginText, String passwordText, String worldText, String scriptNameText, String scriptConfigText, String fpsText, String proxyText) throws IOException, URISyntaxException {
 		List<String> args = new ArrayList<>();
 		if (loginText != null && !loginText.isEmpty() && passwordText != null && !passwordText.isEmpty()) {
-			args.add("--account=" + loginText + ":" + passwordText);
+			args.add("--account=\"" + loginText + ":" + passwordText + "\"");
 		}
 		if (worldText != null && !worldText.isEmpty()) {
-			args.add("--world=" + worldText);
+			args.add("--world=\"" + worldText + "\"");
 		}
 		if (scriptNameText != null && !scriptNameText.isEmpty()) {
-			String arg = "--script=" + scriptNameText;
+			String arg = "--script=\"" + scriptNameText;
 			if (scriptConfigText != null && !scriptConfigText.isEmpty()) {
 				arg += ":" + scriptConfigText;
 			}
+			arg += "\"";
 			args.add(arg);
 		}
 		if (fpsText != null && !fpsText.isEmpty()) {
-			args.add("--fps=" + fpsText);
+			args.add("--fps=\"" + fpsText + "\"");
 		}
-
-		processBuilder.command(path + "RuneLite.exe");
-		processBuilder.command().addAll(args);
-		System.out.println(processBuilder.command());
-		processBuilder.start();
+		if (proxyText != null && !proxyText.isEmpty() && !proxyText.equals("~ None ~")) {
+			var proxy = ProxyTab.getProxy(proxyText);
+			if (proxy != null) {
+				args.add("--cliproxy=\"" + proxy[1] + ":" + proxy[2] + ":" + proxy[3] + ":" + proxy[4] + "\"");
+			}
+			else {
+				System.err.println("Proxy not found: " + proxyText);
+			}
+		}
+		launch(args);
 	}
 
+	private void launch(List<String> args) {
+		// System.out.println("Launching client with args: " + args);
+
+		new Thread(() -> {
+			try {
+				ProcessBuilder processBuilder = new ProcessBuilder();
+				String intellijPath = System.getenv("LOCALAPPDATA") + "/Runelite/";
+				String standalonePath = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath().replace("rl-loader.jar", "");
+				String path = isIntellijDebug() ? intellijPath : standalonePath;
+				// System.out.println("launching from path: " + path);
+
+				processBuilder.command(path + "RuneLite.exe");
+				processBuilder.command().addAll(args);
+				// System.out.println(processBuilder.command());
+				processBuilder.start();
+			}
+			catch (IOException | URISyntaxException ex) {
+				throw new RuntimeException(ex);
+			}
+		}).start();
+	}
 }

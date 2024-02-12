@@ -43,7 +43,7 @@ public class VersionCheck {
 			con.disconnect();
 
 			int version = Integer.parseInt(response.toString());
-			System.out.println("Live version: " + version);
+			// System.out.println("Live version: " + version);
 			return version;
 		}
 		catch (IOException e) {

@@ -1,20 +1,19 @@
 package com.fns.loader;
 
 
+import com.fns.loader.proxy.Proxy;
+import com.fns.loader.ui.components.FDialog;
 import com.fns.loader.ui.proxy.ProxyGUI;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Arnah, EthanVann
@@ -59,7 +58,6 @@ public class Loader {
 					uri = uri.resolve("rl-loader.jar");
 				}
 				addUrl.invoke(classLoader, uri.toURL());
-				System.out.println(uri.getPath());
 
 				// Execute our code inside the runelite client classloader
 				Class<?> clazz = classLoader.loadClass(ClientHijack.class.getName());
@@ -84,6 +82,7 @@ public class Loader {
 		ArgParser argParser = new ArgParser();
 		Set<String> argSet = argParser.parseAndStore(args);
 
+		// open proxy launcher gui
 		if (argSet.contains("--useproxies")) {
 			argSet.remove("--useproxies");
 			SwingUtilities.invokeLater(ProxyGUI::run);
@@ -91,6 +90,25 @@ public class Loader {
 				sleep(10);
 			} while (!FnsProperties.isStart());
 		}
+		// set proxy
+		String proxyArg;
+		if ((proxyArg = argSet.stream().filter(s -> s.startsWith("--cliproxy")).findFirst().orElse(null)) != null) {
+			Proxy proxy = new Proxy(proxyArg.replaceAll("--cliproxy=", ""));
+			proxy.setup();
+			argSet.remove(proxyArg);
+
+			if (!proxy.checkIp()) {
+				List<String> msg = new ArrayList<>();
+				msg.add("Could not connect with this proxy: ");
+				msg.add(proxy.getHost() + ":" + proxy.getPort());
+				if (!proxy.getUsername().equals("null") && !proxy.getPassword().equals("null")) {
+					msg.set(1, msg.get(1) +":" + proxy.getUsername() + ":" + proxy.getPassword());
+				}
+				FDialog.createAndShowCustomDialog(null, "Proxy Error", msg.toArray(new String[0]));
+				System.exit(0);
+			}
+		}
+
 		argSet.add("--disable-telemetry");
 
 		args = argSet.toArray(new String[0]);

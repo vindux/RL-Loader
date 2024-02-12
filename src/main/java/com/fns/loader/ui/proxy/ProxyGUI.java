@@ -24,7 +24,7 @@ public class ProxyGUI extends JFrame {
 	private ProxyGUI() {
 		String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath().replaceAll("/rl-loader.jar", "");
 //		String path = System.getenv("LOCALAPPDATA") + "/Runelite/";
-		System.out.println(path);
+		// System.out.println(path);
 
 		setTitle("Fns Proxy Selector Launcher");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -114,7 +114,6 @@ public class ProxyGUI extends JFrame {
 
 	private void launch(String ip, String port, String user, String pass) throws IOException, ExecutionException, InterruptedException {
 		if (ip != null && !ip.isEmpty() && port != null && !port.isEmpty()) {
-			System.out.println("Setting up proxy with ip: " + ip + " port: " + port + " user: " + user + " pass: " + pass);
 			new Thread(() -> {
 				Proxy proxy = new Proxy(ip, port, user, pass);
 				proxy.setup();
@@ -139,7 +138,6 @@ public class ProxyGUI extends JFrame {
 			}).start();
 		}
 		else {
-			System.out.println("No proxy selected.");
 			FnsProperties.setStart(true);
 		}
 	}

@@ -1,6 +1,6 @@
 package com.fns.loader.proxy;
 
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,12 +9,28 @@ import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
 import java.net.URL;
 
-@NoArgsConstructor
 public class Proxy {
-	private String host;
-	private String port;
-	private String username;
-	private String password;
+@Getter private String host;
+@Getter private String port;
+@Getter private String username;
+@Getter private String password;
+
+	public Proxy(String proxy) {
+		String[] split = proxy.replaceAll("\"", "").split(":");
+		if (split.length == 2) {
+			this.host = split[0];
+			this.port = split[1];
+		}
+		else if (split.length == 4) {
+			this.host = split[0];
+			this.port = split[1];
+			this.username = split[2];
+			this.password = split[3];
+		}
+		else {
+			throw new IllegalArgumentException("Invalid proxy format");
+		}
+	}
 
 	public Proxy(String host, String port) {
 		this.host = host;
@@ -46,7 +62,7 @@ public class Proxy {
 					return auth;
 				}
 			});
-			System.out.println("\nSetup proxy.");
+			// System.out.println("\nSetup proxy.");
 		}
 	}
 
