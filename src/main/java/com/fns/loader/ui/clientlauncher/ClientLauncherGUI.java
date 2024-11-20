@@ -177,6 +177,7 @@ public class ClientLauncherGUI extends JFrame {
 				processBuilder.start();
 			}
 			catch (IOException | URISyntaxException ex) {
+				ex.printStackTrace();
 				throw new RuntimeException(ex);
 			}
 		}).start();

@@ -17,6 +17,7 @@ public class FDialog {
 		customDialog.setSize(300, 130 + messages.length * (lineHeight + 7));
 		customDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		customDialog.setResizable(false);
+		customDialog.setAlwaysOnTop(true);
 
 		FPanel panel = new FPanel(new GridLayout(0, 1));
 		panel.setBackground(Colors.BODY_COLOR);
@@ -53,6 +54,7 @@ public class FDialog {
 		customDialog.setSize(300, 130 + messages.length * (lineHeight + 7));
 		customDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		customDialog.setResizable(false);
+		customDialog.setAlwaysOnTop(true);
 
 		FPanel panel = new FPanel(new GridLayout(0, 1));
 		panel.setBackground(Colors.BODY_COLOR);
